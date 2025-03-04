@@ -1,12 +1,27 @@
 # CS331 Sentiment Analysis Assignment 3
 # This file contains the processing functions
 
+import sys
+import string
+
 
 def process_text(text):
     """
     Preprocesses the text: Remove apostrophes, punctuation marks, etc.
     Returns a list of text
     """
+    preprocessed_text = []
+    file = open(text, 'r') # open the text file for reading
+    # remove punctuation in 
+    for line in file:
+        line = line.strip() # remove end line characters apparently
+        line = line.lower()
+        line = ''.join([char for char in line if char not in string.punctuation])
+        preprocessed_text.append(line)
+
+    # test print statement
+    for line in preprocessed_text:
+        print(line)
 
     return preprocessed_text
 
@@ -44,6 +59,7 @@ def accuracy(predicted_labels, true_labels):
 
 def main():
     # Take in text files and outputs sentiment scores
+    process_text(sys.argv[1])
 
     return 1
 
