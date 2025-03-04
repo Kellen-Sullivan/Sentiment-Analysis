@@ -1,2 +1,2 @@
-# Sentiment-Analysis
-CS 331H Final Assignment
+# cs331-sentiment
+cs331 sentiment analysis assignment 3
