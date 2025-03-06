@@ -12,7 +12,7 @@ def process_text(text):
     """
     preprocessed_text = []
     file = open(text, 'r') # open the text file for reading
-    # remove punctuation in 
+    # remove punctuation in file
     for line in file:
         line = line.strip() # remove end line characters apparently
         line = line.lower()
@@ -20,8 +20,8 @@ def process_text(text):
         preprocessed_text.append(line)
 
     # test print statement
-    for line in preprocessed_text:
-        print(line)
+    # for line in preprocessed_text:
+    #     print(line)
 
     return preprocessed_text
 
@@ -32,6 +32,18 @@ def build_vocab(preprocessed_text):
     preprocessed_text: output from process_text
     Returns unique text tokens
     """
+    # vocab is an array of strings that consists of all unique words in the preprocessed_text in alphabetical order
+    unique_words_arr = []
+    for line in preprocessed_text:
+        words_in_line = line.split(" ");
+        for word in words_in_line:
+            if word not in unique_words_arr and word != '' and word != '\t':
+                unique_words_arr.append(word)
+                
+    vocab = sorted(unique_words_arr)
+
+    # test print
+    # print(vocab)
 
     return vocab
 
@@ -43,6 +55,7 @@ def vectorize_text(text, vocab):
     vocab: vocab from build_vocab
     Returns the vectorized text and the labels
     """
+    
 
     return vectorized_text, labels
 
@@ -59,7 +72,7 @@ def accuracy(predicted_labels, true_labels):
 
 def main():
     # Take in text files and outputs sentiment scores
-    process_text(sys.argv[1])
+    build_vocab(process_text(sys.argv[1]))
 
     return 1
 
