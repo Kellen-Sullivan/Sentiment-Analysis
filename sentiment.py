@@ -103,15 +103,15 @@ def create_txt_file(file_name, vector_text, vocab, labels):
     return 1
 
 def full_preprocess():
-    processed_text = process_text("testSet.txt")
-    vocab = build_vocab(processed_text)
-    vector_text, labels = vectorize_text(processed_text, vocab)
-    create_txt_file("preprocessed_test.txt", vector_text, vocab, labels)
+    test_processed_text = process_text("testSet.txt")
+    test_vocab = build_vocab(test_processed_text)
+    test_vector_text, test_labels = vectorize_text(test_processed_text, test_vocab)
+    create_txt_file("preprocessed_test.txt", test_vector_text, test_vocab, test_labels)
 
-    processed_text = process_text("trainingSet.txt")
-    vocab = build_vocab(processed_text)
-    vector_text, labels = vectorize_text(processed_text, vocab)
-    create_txt_file("preprocessed_train.txt", vector_text, vocab, labels)
+    train_processed_text = process_text("trainingSet.txt")
+    train_vocab = build_vocab(train_processed_text)
+    train_vector_text, train_labels = vectorize_text(train_processed_text, train_vocab)
+    create_txt_file("preprocessed_train.txt", train_vector_text, train_vocab, train_labels)
 
 
 def accuracy(predicted_labels, true_labels):
@@ -120,6 +120,11 @@ def accuracy(predicted_labels, true_labels):
     true_labels: list of 0/1s from text file
     return the accuracy of the predictions
     """
+    correct = 0
+    for i in range(len(predicted_labels)):
+        if predicted_labels[i] == true_labels[i]:
+            correct += 1
+    accuracy_score = correct / len(predicted_labels)
 
     return accuracy_score
 
