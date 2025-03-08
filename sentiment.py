@@ -145,8 +145,6 @@ def accuracy(predicted_labels, true_labels):
     true_labels: list of 0/1s from text file
     return the accuracy of the predictions
     """
-    print(f"predicted_labels: {predicted_labels[:10]}")
-    print(f"true_labels: {true_labels[:10]}")
     correct = 0
     for i in range(len(predicted_labels)):
         if predicted_labels[i] == true_labels[i]:
