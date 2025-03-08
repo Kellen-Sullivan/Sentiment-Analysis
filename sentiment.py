@@ -3,7 +3,7 @@
 
 import sys
 import string
-
+from classifier import BayesClassifier
 
 def process_text(text):
     """
@@ -102,16 +102,41 @@ def create_txt_file(file_name, vector_text, vocab, labels):
 
     return 1
 
-def full_preprocess():
+def create_preprocess_files():
     test_processed_text = process_text("testSet.txt")
-    test_vocab = build_vocab(test_processed_text)
-    test_vector_text, test_labels = vectorize_text(test_processed_text, test_vocab)
-    create_txt_file("preprocessed_test.txt", test_vector_text, test_vocab, test_labels)
+    vocab = build_vocab(test_processed_text)
+    test_vector_text, test_labels = vectorize_text(test_processed_text, vocab)
+    create_txt_file("preprocessed_test.txt", test_vector_text, vocab, test_labels)
 
     train_processed_text = process_text("trainingSet.txt")
-    train_vocab = build_vocab(train_processed_text)
-    train_vector_text, train_labels = vectorize_text(train_processed_text, train_vocab)
-    create_txt_file("preprocessed_train.txt", train_vector_text, train_vocab, train_labels)
+    train_vector_text, train_labels = vectorize_text(train_processed_text, vocab)
+    create_txt_file("preprocessed_train.txt", train_vector_text, vocab, train_labels)
+
+
+
+
+def read_txt_file(file_name):
+    """
+    Reads a text file and returns the vectorized text and labels
+    """
+    first_line = True
+    vector_text = []
+    vocab = []
+    labels = []
+    for line in file_name:
+        if first_line:
+            vocab = line.split(",")
+            first_line = False
+            continue
+        line = line.strip()
+        line = line.split(",")
+        line = [int(i) for i in line]
+        vector_text.append(line[:-1])
+        labels.append(line[-1])
+    
+    return vector_text, labels, vocab[:-1]
+        
+
 
 
 def accuracy(predicted_labels, true_labels):
@@ -120,6 +145,8 @@ def accuracy(predicted_labels, true_labels):
     true_labels: list of 0/1s from text file
     return the accuracy of the predictions
     """
+    print(f"predicted_labels: {predicted_labels[:10]}")
+    print(f"true_labels: {true_labels[:10]}")
     correct = 0
     for i in range(len(predicted_labels)):
         if predicted_labels[i] == true_labels[i]:
@@ -130,10 +157,19 @@ def accuracy(predicted_labels, true_labels):
 
 
 def main():
-    # Take in text files and outputs sentiment scores
-    full_preprocess()
+    classifier = BayesClassifier()
 
+    test_vector, test_labels, vocab = read_txt_file(open("preprocessed_test.txt", "r"))
+    train_vector, train_labels, _ = read_txt_file(open("preprocessed_train.txt", "r"))
 
+    for i in range(4):
+        classifier.train(train_vector[:classifier.file_sections[i]], train_labels[:classifier.file_sections[i]], vocab)
+        train_predictions = classifier.classify_text(train_vector, vocab)
+        test_predictions = classifier.classify_text(test_vector, vocab)
+        print(f"Training accuracy for section {i + 1}: {accuracy(train_predictions, train_labels)}")
+        print(f"Test accuracy for section {i + 1}: {accuracy(test_predictions, test_labels)}")
+        # create_plot(accuracy(0, i, train_predictions, train_labels)
+        # create_plot(accuracy(1, i, test_predictions, test_labels)
 
     return 1
 
