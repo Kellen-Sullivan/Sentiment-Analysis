@@ -53,9 +53,9 @@ class BayesClassifier():
         """
         predictions = []
 
-        pos_prob = math.log(self.percent_positive_sentences)
-        neg_prob = math.log(self.percent_negative_sentences)
         for vector in vectors:
+            pos_prob = math.log(self.percent_positive_sentences)
+            neg_prob = math.log(self.percent_negative_sentences)
             for i in range(len(vector)):
                 if vector[i] == 1:
                     pos_prob += math.log(self.postive_word_counts[vocab[i]] / self.positive_sentence_count)
