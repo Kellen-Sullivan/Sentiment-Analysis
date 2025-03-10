@@ -23,6 +23,7 @@ def process_text(text):
     return preprocessed_text
 
 
+
 def build_vocab(preprocessed_text):
     """
     Builds the vocab from the preprocessed text
@@ -40,6 +41,7 @@ def build_vocab(preprocessed_text):
     vocab = sorted(unique_words_arr)
 
     return vocab
+
 
 
 def vectorize_text(text, vocab):
@@ -165,6 +167,7 @@ def create_plot(train, accuracies):
     
 
 
+
 def main():
     classifier = BayesClassifier()
 
@@ -184,8 +187,8 @@ def main():
 
         # open results.txt to write to it
         results_file = open("results.txt", "a")
-        results_file.write(f"Training accuracy for section {i + 1}: {train_accuracy}\n")
-        results_file.write(f"Test accuracy for section {i + 1}: {test_accuracy}\n")
+        results_file.write(f"Training accuracy for section {i + 1} ({classifier.file_sections[i]}/{classifier.file_length}): {train_accuracy}\n")
+        results_file.write(f"Test accuracy for section {i + 1} ({classifier.file_sections[i]}/{classifier.file_length}): {test_accuracy}\n")
         results_file.close()
         
         #store accurcy on this part in array
@@ -194,7 +197,7 @@ def main():
 
     # create plots
     # create_plot(1, train_accuracies)
-    #create_plot(0, test_accuracies)
+    # create_plot(0, test_accuracies)
 
     return 1
 
