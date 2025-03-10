@@ -1,0 +1,8 @@
+Training accuracy for section 1: 0.6593186372745491
+Test accuracy for section 1: 0.613682092555332
+Training accuracy for section 2: 0.7214428857715431
+Test accuracy for section 2: 0.6438631790744467
+Training accuracy for section 3: 0.7995991983967936
+Test accuracy for section 3: 0.6941649899396378
+Training accuracy for section 4: 0.9038076152304609
+Test accuracy for section 4: 0.7826961770623743

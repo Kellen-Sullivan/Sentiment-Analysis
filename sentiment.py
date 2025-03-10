@@ -181,11 +181,19 @@ def main():
         test_predictions = classifier.classify_text(test_vector, vocab)
         train_accuracy = accuracy(train_predictions, train_labels)
         test_accuracy = accuracy(test_predictions, test_labels)
-        print(f"Training accuracy for section {i + 1}: {train_accuracy}")
-        print(f"Test accuracy for section {i + 1}: {test_accuracy}")
+
+        # open results.txt to write to it
+        results_file = open("results.txt", "a")
+        results_file.write(f"Training accuracy for section {i + 1}: {train_accuracy}\n")
+        results_file.write(f"Test accuracy for section {i + 1}: {test_accuracy}\n")
+        results_file.close()
+        
+        #store accurcy on this part in array
         train_accuracies.append(train_accuracy)
         test_accuracies.append(test_accuracy)
-    create_plot(1, train_accuracies)
+
+    # create plots
+    # create_plot(1, train_accuracies)
     #create_plot(0, test_accuracies)
 
     return 1
