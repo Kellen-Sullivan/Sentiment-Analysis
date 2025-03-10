@@ -1,9 +1,10 @@
 # CS331 Sentiment Analysis Assignment 3
 # This file contains the processing functions
 
-import sys
 import string
 from classifier import BayesClassifier
+import matplotlib.pyplot as plt
+import numpy as np
 
 def process_text(text):
     """
@@ -18,10 +19,6 @@ def process_text(text):
         line = line.lower()
         line = ''.join([char for char in line if char not in string.punctuation])
         preprocessed_text.append(line)
-
-    # test print statement
-    # for line in preprocessed_text:
-    #     print(line)
 
     return preprocessed_text
 
@@ -42,9 +39,6 @@ def build_vocab(preprocessed_text):
                 
     vocab = sorted(unique_words_arr)
 
-    # test print
-    # print(vocab)
-
     return vocab
 
 
@@ -57,7 +51,6 @@ def vectorize_text(text, vocab):
     """
     vectorized_text = []
     labels = []
-
 
     for line in text:
         vect_line = []
@@ -154,20 +147,46 @@ def accuracy(predicted_labels, true_labels):
     return accuracy_score
 
 
+def create_plot(train, accuracies):
+    percentage_trained_on = [25, 50, 75, 100]
+
+    plt.plot(percentage_trained_on, accuracies, linestyle='solid', color='blue', marker='o', markersize=4)
+
+    if train:
+        plt.title("Classifier Accuracy on Training Data Set")
+    else:
+        plt.title("Classifer Accuracy on Testing Data Set")
+    plt.xlabel("Percentage of Data Trained On")
+    plt.ylabel("Accuracy")
+    plt.ylim(0.6,1)
+    plt.xticks(np.arange(25,101,25))
+    plt.show()
+    return
+    
+
+
 def main():
     classifier = BayesClassifier()
 
     test_vector, test_labels, vocab = read_txt_file(open("preprocessed_test.txt", "r"))
     train_vector, train_labels, _ = read_txt_file(open("preprocessed_train.txt", "r"))
 
+    # accuracy arrays for creating the plots
+    train_accuracies = []
+    test_accuracies = []
+
     for i in range(4):
         classifier.train(train_vector[:classifier.file_sections[i]], train_labels[:classifier.file_sections[i]], vocab)
         train_predictions = classifier.classify_text(train_vector, vocab)
         test_predictions = classifier.classify_text(test_vector, vocab)
-        print(f"Training accuracy for section {i + 1}: {accuracy(train_predictions, train_labels)}")
-        print(f"Test accuracy for section {i + 1}: {accuracy(test_predictions, test_labels)}")
-        # create_plot(accuracy(0, i, train_predictions, train_labels)
-        # create_plot(accuracy(1, i, test_predictions, test_labels)
+        train_accuracy = accuracy(train_predictions, train_labels)
+        test_accuracy = accuracy(test_predictions, test_labels)
+        print(f"Training accuracy for section {i + 1}: {train_accuracy}")
+        print(f"Test accuracy for section {i + 1}: {test_accuracy}")
+        train_accuracies.append(train_accuracy)
+        test_accuracies.append(test_accuracy)
+    create_plot(1, train_accuracies)
+    #create_plot(0, test_accuracies)
 
     return 1
 

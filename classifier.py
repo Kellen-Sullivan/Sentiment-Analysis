@@ -53,14 +53,19 @@ class BayesClassifier():
         """
         predictions = []
 
+        # From the slides:
+        # X_j can take 2 values for all j, so N_j = 2
+        # P(Y=v) = P(sentence = positive) or P(sentence = negative)
+        # X_j = word at jth index in vocab, u_j = # of times the word at jth index in vocab appears in a sentence that is positve (negative)
+
         for vector in vectors:
-            pos_prob = math.log(self.percent_positive_sentences)
-            neg_prob = math.log(self.percent_negative_sentences)
-            for i in range(len(vector)):
-                if vector[i] == 1:
-                    pos_prob += math.log(self.postive_word_counts[vocab[i]] / self.positive_sentence_count)
-                    neg_prob += math.log(self.negative_word_counts[vocab[i]] / self.negative_sentence_count)
-            predictions.append(1 if pos_prob > neg_prob else 0)
+            pos_prob = math.log(self.percent_positive_sentences) # log(P(Y=v)) 
+            neg_prob = math.log(self.percent_negative_sentences) # log(P(Y=v))
+            for i in range(len(vector)): # summation over all X_j's (words in vocab)
+                if vector[i] == 1: # if word in vocab at index i, is used in the current sentence
+                    pos_prob += math.log(self.postive_word_counts[vocab[i]] / self.positive_sentence_count) # log(P(X_j = u_j | Y=v)) 
+                    neg_prob += math.log(self.negative_word_counts[vocab[i]] / self.negative_sentence_count) # log(P(X_j = u_j | Y=v)) 
+            predictions.append(1 if pos_prob > neg_prob else 0) # argmax v
 
         return predictions
     
@@ -72,10 +77,10 @@ class BayesClassifier():
         self.postive_word_counts = {}
         self.negative_word_counts = {}
         for word in vocab:
-            self.postive_word_counts[word] = 1
+            self.postive_word_counts[word] = 1 # start at 1 for Uniform Dirichlet reasons
             self.negative_word_counts[word] = 1
 
-        self.positive_sentence_count = 2 # Number of possibilites for labels
+        self.positive_sentence_count = 2 # Number of possibilites for labels, start at 2 for N_j I think
         self.negative_sentence_count = 2
         self.percent_positive_sentences = .5
         self.percent_negative_sentences = .5
